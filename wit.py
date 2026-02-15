@@ -1,6 +1,7 @@
 import os
 import shutil
 from datetime import datetime
+from pathlib import Path
 
 from helper_files import (found_in_witignore, copy_all_needed,
                          compare_paths, get_last_commit_id,
@@ -47,10 +48,8 @@ def status_def():
 def add_def(name):
     """Add file/folder to staging area."""
     try:
-        if (found_in_witignore(name) or name == ".wit" or
-                name == ".witignore.txt"):
-            return (f"'{name}' is ignored file and cannot be added to "
-                    "staging area")
+        if (found_in_witignore(name) or name == ".wit" or name == ".witignore.txt"):
+            return (f"'{name}' is ignored file and cannot be added to ""staging area")
 
         if name == ".":
             stage_path = os.path.join(os.getcwd(), ".wit", "stage")
@@ -59,16 +58,17 @@ def add_def(name):
             copy_all_needed(os.getcwd(), stage_path)
             return "Added all files to staging area"
 
-        stage_item_path = os.path.join(os.getcwd(), ".wit", "stage",
-                                       name)
+        stage_item_path = os.path.join(os.getcwd(), ".wit", "stage",name)
         shutil.rmtree(stage_item_path, ignore_errors=True)
         if os.path.isdir(os.path.join(os.getcwd(), name)):
             os.mkdir(stage_item_path)
             src_path = os.path.join(os.getcwd(), name)
             copy_all_needed(src_path, stage_item_path)
         else:
-            shutil.copy2(os.path.join(os.getcwd(), name),
-                          stage_item_path)
+            os.makedirs(os.path.dirname(stage_item_path), exist_ok=True)
+            shutil.copy2(os.path.join(os.getcwd(), name), stage_item_path)
+
+
 
         return f"Added {name} to staging area"
 
@@ -95,6 +95,7 @@ def init_def():
         return "Reinitialized existing .wit repository"
     else:
         return f"Initialized empty .wit repository in {os.getcwd()}"
+
 
 def commit_def(msg):
     """Create a commit with the staging area."""
@@ -141,14 +142,13 @@ def checkout_def(commit_id):
                                        commit_id)
         stage_path = os.path.join(os.getcwd(), ".wit", "stage")
         last_commit_id = get_last_commit_id()
-        if last_commit_id:
-            last_commit_path = os.path.join(os.getcwd(), ".wit",
-                                            "commits",
-                                            last_commit_id)
-            if compare_paths(stage_path, last_commit_path,
-                             "uncommited") != "":
-                return ("There are uncommitted changes. Use 'status' "
-                        "to see details.")
+        # to check if there are uncommitted changes
+        last_commit_path = os.path.join(os.getcwd(), ".wit",
+                                        "commits",
+                                        last_commit_id)
+        if compare_paths(stage_path, last_commit_path,
+                            "uncommited") != "":
+            return ("There are uncommitted changes. Use 'status' to see details.")
 
         # Remove all files in stage and current dir except .wit
         shutil.rmtree(stage_path, ignore_errors=True)
