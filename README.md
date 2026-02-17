@@ -12,10 +12,10 @@ Wit is a lightweight version control system inspired by Git, designed for tracki
 
 1. Navigate to the project directory:
 ```bash
-cd path/to/python/wit/project
+cd path/python wit project
 ```
 
-2. Install the package in development mode:
+2. Run this command in the cmd, as administrator
 ```bash
 pip install -e .
 ```
