@@ -59,7 +59,6 @@ def copy_all_needed(src, dest):
 
 def compare_paths(src, dest, string):
     """Compare two paths and identify differences.
-
     Args:
         src: Source path to compare.
         dest: Destination path to compare.
@@ -71,8 +70,7 @@ def compare_paths(src, dest, string):
     curr_path = os.getcwd()
     result = ""
     for root, dirs, files in os.walk(src):
-        dirs[:] = [d for d in dirs if d != ".wit" and
-                    not found_in_witignore(d)]
+        dirs[:] = [d for d in dirs if d != ".wit" and not found_in_witignore(d)]
         files[:] = [f for f in files if f != ".witignore.txt" and
                     not found_in_witignore(f)]
         copysrc = root
