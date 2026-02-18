@@ -22,13 +22,12 @@ def status_def():
                                 last_commit_id)
                    if last_commit_id else None)
 
-    res_untracked = compare_paths(curr_path, stage_path, "untrucked")
+    res_untracked = compare_paths(curr_path, stage_path, "untracked")
     res_unstaged = compare_paths(curr_path, stage_path, "unstaged")
-    res_uncommited = (compare_paths(stage_path, commit_path,
-                                    "uncommited")
-                      if commit_path
-                      else return_all_files_in_dir(stage_path,
-                                                   "new file: "))
+    res_uncommitted = (compare_paths(stage_path, commit_path,
+                                     "uncommitted")
+                       if commit_path
+                       else return_all_files_in_dir(stage_path, "new file: "))
 
     if res_untracked != "":
         result += "Untracked files:\n"
@@ -36,9 +35,9 @@ def status_def():
     if res_unstaged != "":
         result += "Changes not staged for commit:\n"
         result += res_unstaged
-    if res_uncommited != "":
+    if res_uncommitted != "":
         result += "Changes to be committed:\n"
-        result += res_uncommited
+        result += res_uncommitted
     if result == "":
         result = "nothing to commit, working tree clean\n"
 
@@ -110,7 +109,7 @@ def commit_def(msg):
         last_commit_path = os.path.join(os.getcwd(), ".wit", "commits",
                                         commit_id)
         res = compare_paths(stage_path, last_commit_path,
-                            "uncommited")
+                            "uncommitted")
         if res == "":
             return "Nothing to commit"
 
@@ -144,7 +143,7 @@ def checkout_def(commit_id):
         last_commit_path = os.path.join(os.getcwd(), ".wit",
                                         "commits",
                                         last_commit_id)
-        if compare_paths(stage_path, last_commit_path, "uncommited") != "":
+        if compare_paths(stage_path, last_commit_path, "uncommitted") != "":
             return "There are uncommitted changes. Use 'status' to see details."
 
         # Remove all files in stage and current dir except .wit

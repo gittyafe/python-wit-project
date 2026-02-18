@@ -40,11 +40,10 @@ def copy_all_needed(src, dest):
     """
     try:
         for root, dirs, files in os.walk(src):
-            copysrc = root
             copydest = root.replace(src, dest)
 
             dirs[:] = [d for d in dirs if d != ".wit" and
-                        not found_in_witignore(d)]
+                       not found_in_witignore(d)]
             for d in dirs:
                 os.mkdir(os.path.join(copydest, d))
 
@@ -52,7 +51,7 @@ def copy_all_needed(src, dest):
             for f in files:
                 if f != ".witignore.txt" and not found_in_witignore(f):
                     shutil.copy2(os.path.join(root, f),
-                                    os.path.join(copydest, f))
+                                 os.path.join(copydest, f))
     except Exception as e:
         return f"error: {str(e)}"
 
@@ -79,19 +78,19 @@ def compare_paths(src, dest, string):
             if not os.path.exists(os.path.join(copydest, f)):
                 if string == "unstaged":
                     continue
-                elif string == "untrucked":
+                elif string == "untracked":
                     result += f"\t{f}\n"
                 else:
                     result += f"\tnew file: {f}\n"
 
             elif is_diff_file(os.path.join(copysrc, f),
-                                os.path.join(copydest, f)):
-                if string == "untrucked":
+                              os.path.join(copydest, f)):
+                if string == "untracked":
                     continue
                 else:
                     result += f"\tmodified: {f}\n"
 
-        if os.path.exists(copydest) and string != "untrucked":
+        if os.path.exists(copydest) and string != "untracked":
             for fd in os.listdir(copydest):
                 if not os.path.exists(os.path.join(copysrc, fd)):
                     if os.path.isfile(os.path.join(copydest, fd)):

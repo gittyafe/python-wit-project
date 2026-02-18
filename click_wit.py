@@ -1,5 +1,4 @@
 import click
-
 from wit_defs import (status_def, add_def, init_def, commit_def, checkout_def)
 
 
